@@ -25,10 +25,11 @@
 #require 'redis'
   # now letting the end-user doing this require
 
+require 'logger'
+
 require 'rufus-json'
 require 'ruote/storage/base'
 require 'ruote/redis/version'
-
 
 module Ruote
 module Redis
@@ -226,6 +227,16 @@ module Redis
       ids = ids[skip, limit]
 
       docs = ids.length > 0 ? @redis.mget(*ids) : []
+      if docs.is_a?(String)
+        logger = Logger.new("/tmp/ruote-redis.log")
+        logger.error "#" * 100
+        logger.error "Queries Id's: #{ids.inspect}"
+        logger.error "Result (String): \n#{docs}"
+        logger.close
+
+        docs = ids.length > 0 ? @redis.mget(*ids) : []
+      end
+
       docs = docs.inject({}) do |h, doc|
         if doc
           doc = Rufus::Json.decode(doc)
