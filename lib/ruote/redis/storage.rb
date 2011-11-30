@@ -287,6 +287,7 @@ module Redis
       ids = ids[skip, limit]
 
       docs = ids.length > 0 ? @redis.mget(*ids) : []
+      docs = [] unless docs.is_a?(Array)
       docs = docs.inject({}) do |h, doc|
         if doc
           doc = Rufus::Json.decode(doc)
