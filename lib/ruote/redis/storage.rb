@@ -288,7 +288,7 @@ module Redis
       ids = ids[skip, limit]
 
       docs = ids.length > 0 ? @redis.mget(*ids) : []
-      unless doc.is_a?(Array)
+      unless docs.is_a?(Array)
         error <<-MSG
           [get_many] expected Array but got something else
           type: #{type}
