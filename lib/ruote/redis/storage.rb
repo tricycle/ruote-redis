@@ -121,6 +121,7 @@ module Redis
         if (a = (keys(pattern) rescue nil)).is_a?(Array)
           a
         else
+          error "[#{keys_to_a}] excepted Array, but got something else for pattern:\n#{pattern}"
           []
         end
       end
@@ -287,7 +288,19 @@ module Redis
       ids = ids[skip, limit]
 
       docs = ids.length > 0 ? @redis.mget(*ids) : []
-      docs = [] unless docs.is_a?(Array)
+      unless doc.is_a?(Array)
+        error <<-MSG
+          [get_many] expected Array but got something else
+          type: #{type}
+          key: #{key}
+          ids: #{ids}
+          class of result: #{docs.class}
+          result: #{docs}
+        MSG
+
+        docs = []
+      end
+
       docs = docs.inject({}) do |h, doc|
         if doc
           doc = Rufus::Json.decode(doc)
