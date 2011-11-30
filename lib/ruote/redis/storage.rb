@@ -27,6 +27,7 @@ require 'redis'
 require 'rufus-json'
 require 'ruote/storage/base'
 require 'ruote/redis/version'
+require 'ruote/redis/logging'
 
 
 module Ruote
@@ -61,6 +62,7 @@ module Redis
   class Storage
 
     include Ruote::StorageBase
+    include Logging
 
     attr_reader :redis
 
