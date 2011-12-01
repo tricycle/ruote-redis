@@ -121,7 +121,6 @@ module Redis
         if (a = (keys(pattern) rescue nil)).is_a?(Array)
           a
         else
-          error "[keys_to_a] excepted Array, but got something else for pattern:\n#{pattern}"
           []
         end
       end
